@@ -24,6 +24,13 @@
      VitePress 默认用不透明的 --vp-c-bg-alt，压在毛玻璃面板上会像块实心补丁，
      这里单独给一个半透明值，让面板的模糊与透光透出来。 */
   --vp-nav-search-bg: rgba(255, 255, 255, 0.5);
+
+  /* 移动端汉堡菜单面板的底色。
+     VitePress 默认用不透明的 --vp-c-bg，整屏糊死；改成半透明后
+     配合下面的 backdrop-filter 就是毛玻璃，能透出后面的页面内容。
+     改这个变量而不是直接改 .VPNavScreen 的 background-color，
+     是因为那条规则带 scoped 属性、优先级更高，改变量可以绕开优先级之争。 */
+  --vp-nav-screen-bg-color: color-mix(in srgb, var(--vp-c-bg) 80%, transparent);
 }
 
 .dark {
@@ -60,6 +67,15 @@
 /* 默认主题在顶栏下方画的 1px 分隔线，与面板造型冲突，去掉 */
 .VPNavBar .divider {
   display: none;
+}
+
+/* ==================================================
+   移动端汉堡菜单面板：加上和顶栏一致的毛玻璃
+   ================================================== */
+.VPNavScreen {
+  /* 模糊参数与顶栏共用同一个变量，改 NavBlur.vue 里的值两边一起变 */
+  -webkit-backdrop-filter: var(--vp-nav-backdrop-filter);
+  backdrop-filter: var(--vp-nav-backdrop-filter);
 }
 
 /* ==================================================
