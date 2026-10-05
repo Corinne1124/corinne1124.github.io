@@ -23,7 +23,7 @@ export default defineConfig({
   },
 
   title: 'Corinne的个人博客',
-  description: '记录学习、思考与生活',
+  description: `"走吧，还有很多事没干呢~"`,
 
   // 内容页统一套用左右两栏布局（左文章列表 + 右正文）。
   // 首页自己带 layout: page，404 不是文章页，都不动；

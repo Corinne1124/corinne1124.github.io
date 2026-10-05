@@ -102,6 +102,21 @@
   display: none !important;
 }
 
+/* ==================================================
+   移动端：搜索图标与头像互换位置
+   断点与 VitePress 的 48rem 对齐（< 768px 用移动端导航）
+   ================================================== */
+@media (max-width: 767.98px) {
+  /* 搜索是 order:-1，头像设成 -2 就排到它前面了 */
+  .profile {
+    order: -2;
+    /* 间距从左侧挪到右侧，保证头像与搜索之间仍有间隔。
+       组件自己的样式带 scoped 属性、优先级更高，所以要 !important。 */
+    margin-left: 0 !important;
+    margin-right: 0.75rem !important;
+  }
+}
+
 /* 移动端收窄两侧间距 */
 @media (max-width: 768px) {
   .VPNavBar::before {
