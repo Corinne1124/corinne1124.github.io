@@ -1,0 +1,75 @@
+# 构建 VitePress 站点并发布到 GitHub Pages
+#
+# 本仓库的根目录就是 VitePress 项目（package.json 与 .vitepress/ 同级），
+# 所以下面的路径都相对仓库根，不需要 working-directory。
+#
+# 首次启用需要两步：
+#   1. 仓库 Settings → Pages → Build and deployment → Source 选 "GitHub Actions"
+#   2. 推送到 main 分支（或在 Actions 页面手动触发本工作流）
+#
+# 关于 base：
+#   项目站点的地址是 https://<用户名>.github.io/<仓库名>/，
+#   资源路径必须带 /<仓库名>/ 前缀，否则部署后全站静态资源 404。
+#   这里用 github.event.repository.name 自动取仓库名，不必硬编码。
+#   如果仓库名不是 <用户名>.github.io（clone或fork的站点），
+#   把 Build 步骤里那行改成 DOCS_BASE: /${{ github.event.repository.name }}/
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只跑一个发布，避免并发写 Pages
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 完整历史：VitePress 的「最后更新时间」依赖 git 提交时间
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run docs:build
+        env:
+          DOCS_BASE: /
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
