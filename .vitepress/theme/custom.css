@@ -1,0 +1,112 @@
+/* .vitepress/theme/custom.css */
+
+/* ==================================================
+   顶栏：顶部贴边、向下悬伸的半透明毛玻璃面板
+   ================================================== */
+
+:root {
+  /* 不设置 --vp-layout-top-height（默认 0），顶栏紧贴视口顶部。
+     该变量会同步影响导航栏、正文、侧边栏的垂直偏移，保持为 0 即可。 */
+
+  /* 半透明底色 + 高斯模糊 = 毛玻璃；alpha 越低越通透 */
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.3);
+
+  /* 模糊度的兜底值（其他页）。
+     实际值由 components/NavBlur.vue 按「页面 frontmatter 的 navBlur >
+     页面类型默认值」算出来，以行内样式写到 <html> 上覆盖这里。
+     首页默认更轻（10px），所以这里保持其他页的 18px。 */
+  --vp-nav-backdrop-filter: saturate(180%) blur(18px);
+
+  /* 首页未滚动时保持同样的毛玻璃，不做透明处理 */
+  --vp-nav-home-bg-color: var(--vp-nav-bg-color);
+
+  /* 顶栏搜索按钮的底色。
+     VitePress 默认用不透明的 --vp-c-bg-alt，压在毛玻璃面板上会像块实心补丁，
+     这里单独给一个半透明值，让面板的模糊与透光透出来。 */
+  --vp-nav-search-bg: rgba(255, 255, 255, 0.5);
+}
+
+.dark {
+  --vp-nav-bg-color: rgba(20, 20, 24, 0.25);
+  --vp-nav-search-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* 面板本体。
+   VitePress 把顶栏背景画在 .VPNavBar::before 上，而不是 .VPNavBar 本身，
+   且那条规则带 scoped 属性、优先级更高，所以 left/right 需要 !important。 */
+.VPNavBar::before {
+  left: 12px !important;
+  right: 12px !important;
+  /* 只有下方两角收圆，顶部平直贴住视口，像从顶部伸出来 */
+  border-radius: 0 0 14px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-top: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+  -webkit-backdrop-filter: var(--vp-nav-backdrop-filter);
+}
+
+.dark .VPNavBar::before {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* 搜索按钮。
+   组件自带的规则是 .VPNavBarSearchButton[data-v-x]（scoped，且包在媒体查询里），
+   这里用三层选择器提高优先级，避免依赖 CSS 加载顺序。 */
+.VPNav .VPNavBar .VPNavBarSearchButton {
+  background-color: var(--vp-nav-search-bg);
+}
+
+/* 默认主题在顶栏下方画的 1px 分隔线，与面板造型冲突，去掉 */
+.VPNavBar .divider {
+  display: none;
+}
+
+/* ==================================================
+   渲染终端动画的页面（首页）：背景恒为近黑
+   浅色模式下整站文字是深色，压在近黑背景上不可读，
+   所以把顶栏内部的配色整体切到深色主题那一套。
+   深色模式下这些值本就接近现况，不会产生额外变化。
+   ================================================== */
+.Layout:has(.web-bg) .VPNavBar {
+  --vp-c-text-1: #f0f0f0;
+  --vp-c-text-2: #d4d4d8;
+  --vp-c-text-3: #a1a1aa;
+
+  /* 下拉浮层的卡片底色（.VPMenu 用它，且渲染在顶栏内部） */
+  --vp-c-bg-elv: #1e1e22;
+
+  /* 面板是深色，搜索按钮改用暗色内嵌，否则浅色文字压不住 */
+  --vp-nav-search-bg: rgba(0, 0, 0, 0.25);
+
+  --vp-c-divider: rgba(255, 255, 255, 0.16);
+  --vp-c-gutter: rgba(255, 255, 255, 0.16);
+  --vp-c-border: rgba(255, 255, 255, 0.22);
+  --vp-c-border-hard: rgba(255, 255, 255, 0.28);
+}
+
+/* ==================================================
+   亮色/暗色滑块：移到搜索框左侧
+   ================================================== */
+.VPNavBarAppearance {
+  order: -2;
+  margin-right: 0.5rem;
+}
+
+.VPNavBarSearch {
+  order: -1;
+}
+
+/* 原来挂在滑块前面的 1px 分隔线会跟着跑到最左边，去掉 */
+.VPNavBarAppearance::before {
+  display: none !important;
+}
+
+/* 移动端收窄两侧间距 */
+@media (max-width: 768px) {
+  .VPNavBar::before {
+    left: 8px !important;
+    right: 8px !important;
+    border-radius: 0 0 12px 12px;
+  }
+}
