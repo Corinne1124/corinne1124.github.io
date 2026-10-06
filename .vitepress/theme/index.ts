@@ -24,8 +24,18 @@ export default {
   },
   enhanceApp({ app, router, siteData }) {
     app.component('IndexBox', IndexBox)
-    // 文章页布局：左侧文件树 + 右侧正文。
-    // config.mts 的 transformPageData 会把内容页的 layout 设成这个组件名。
     app.component('BlogLayout', BlogLayout)
+
+    app.provide('Profile', {
+      avatar: 'https://avatars.githubusercontent.com/u/321801735',
+      name: 'Corinne1124',
+      bio: '想成为程序员的某某',
+      // 文字链接
+      links: [],
+      // 图标链接（图标内置在ProfileMenu.vue的 ICONS 里）
+      socials: [
+        { icon: 'github', link: 'https://github.com/corinne1124', label: 'GitHub' }
+      ]
+    })
   }
 } satisfies Theme

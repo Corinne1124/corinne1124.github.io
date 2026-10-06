@@ -70,26 +70,15 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, inject } from 'vue'
 import { useRoute } from 'vitepress'
-
 /* ==================================================================
-   改这里即可。
+   改这里即可：头像、昵称、简介、链接都在下面这个对象里。
    avatar 支持完整外链（https://...）或 public/ 下的本地路径（/avatar.png）。
-   留空时显示首字母圆形占位；填了地址但加载失败也会自动退化成占位，
-   不会出现碎图。
+   留空时显示首字母圆形占位；填了地址但加载失败也会自动退化成占位，不会出现碎图。
 ================================================================== */
-const profile = {
-  avatar: 'https://avatars.githubusercontent.com/u/321801735',
-  name: 'Corinne',
-  bio: '记录学习、思考与生活',
-  // 文字链接
-  links: [],
-  // 图标链接（图标内置在下面的 ICONS 里）
-  socials: [
-    { icon: 'github', link: 'https://github.com/corinne1124', label: 'GitHub' }
-  ]
-}
+const profile = inject('Profile')
+
 
 /* 内置图标，24x24 viewBox，用 currentColor 跟随文字颜色。
    不依赖 VitePress 内部组件，升级主题不会失效。 */

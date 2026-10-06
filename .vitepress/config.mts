@@ -11,19 +11,15 @@ export default defineConfig({
   base: process.env.DOCS_BASE || '/',
 
   // 去掉网址里的 .html 后缀（/about.html → /about）。
-  // 产物里仍然是 about.html，只是链接不再带后缀，
-  // 需要托管平台支持「请求 /about 时返回 about.html」——
-  // GitHub Pages 原生支持，本地 dev 也支持。
   cleanUrls: true,
 
   vite: {
-    // 用 import.meta.url 推导路径，而不是 CJS 的 __dirname：
-    // 后者不被 Vite 的 configLoader: 'native' 支持（将来会变成默认）。
+    // 用 import.meta.url 推导路径
     publicDir: fileURLToPath(new URL('../public', import.meta.url))
   },
 
   title: 'Corinne的个人博客',
-  description: `"走吧，还有很多事没干呢~"`,
+  description: `真的会有人看嘛？`,
 
   // 内容页统一套用左右两栏布局（左文章列表 + 右正文）。
   // 首页自己带 layout: page，404 不是文章页，都不动；
