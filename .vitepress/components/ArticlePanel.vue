@@ -27,6 +27,16 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
 }
 
+/* 代码块不要向外扩。
+   VitePress 在窄屏（<640px）给代码块 margin: 1rem -1.5rem，是为了让它贴到
+   「内边距 1.5rem 的正文容器」边缘；但这里外面是卡片、内边距只有 1.15rem，
+   负边距会戳出卡片边界。统一收回来，并补上圆角让它在卡片里是个完整方块。 */
+:deep(.vp-doc) div[class*='language-'] {
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .article {
     padding: 1.25rem 1.15rem 1.5rem;

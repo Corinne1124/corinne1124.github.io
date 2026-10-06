@@ -50,6 +50,10 @@ import ArticlePanel from './ArticlePanel.vue'
 @media (max-width: 900px) {
   .blog-layout {
     flex-direction: column;
+    /* 关键：基础样式里是 align-items: flex-start（为了让侧栏不被拉伸），
+       列方向下它会让子项按「内容宽度」撑开 —— 正文卡片会被最长的代码行
+       撑破容器，导致整页横向溢出。这里必须改回 stretch。 */
+    align-items: stretch;
     gap: 1rem;
     padding: 1rem 1rem 3rem;
   }
