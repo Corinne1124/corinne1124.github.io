@@ -1,14 +1,18 @@
 import { defineConfig } from 'vitepress'
 import { fileURLToPath } from 'node:url'
 
+// GitHub Pages 的项目站点地址是 https://<用户名>.github.io/<仓库名>/，
+// 资源路径必须带 /<仓库名>/ 前缀，否则全站静态资源 404。
+// 部署工作流会注入 DOCS_BASE，本地开发不注入，所以本地是根路径。
+// 归一成以 / 结尾，方便下面 head 里手动拼接。
+const rawBase = process.env.DOCS_BASE || '/'
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   srcDir: "content",
 
-  // GitHub Pages 的项目站点地址是 https://<用户名>.github.io/<仓库名>/，
-  // 资源路径必须带 /<仓库名>/ 前缀，否则全站静态资源 404。
-  // 部署工作流会注入 DOCS_BASE，本地开发不注入，所以本地是根路径。
-  base: process.env.DOCS_BASE || '/',
+  base,
 
   // 去掉网址里的 .html 后缀（/about.html → /about）。
   cleanUrls: true,
@@ -31,8 +35,15 @@ export default defineConfig({
     }
   },
 
-  // 背景终端动画所需的两款字体
   head: [
+    // 网站图标（浏览器标签页那个）。由 public/logo.png 缩出来的 32x32，
+    // 原图 51KB，这份只有 2KB。
+    // 注意：head 里的地址 VitePress 不会自动加 base 前缀，必须自己拼 ——
+    // 否则部署到 GitHub Pages 的子路径后 favicon 会 404。
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${base}favicon.png` }],
+    // iOS 添加到主屏幕时用的图标
+    ['link', { rel: 'apple-touch-icon', href: `${base}apple-touch-icon.png` }],
+    // 背景终端动画所需的两款字体
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [

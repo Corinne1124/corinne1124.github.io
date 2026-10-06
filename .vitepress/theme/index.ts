@@ -34,7 +34,9 @@ export default {
       links: [],
       // 图标链接（图标内置在ProfileMenu.vue的 ICONS 里）
       socials: [
-        { icon: 'github', link: 'https://github.com/corinne1124', label: 'GitHub' }
+        { icon: 'github', link: 'https://github.com/corinne1124', label: 'GitHub' },
+        { icon: 'bilibili', link: 'https://space.bilibili.com/1240864447', label: 'Bilibili' },
+        { icon: 'steam', link: 'https://steamcommunity.com/id/corinne1124/', label: 'Steam' }
       ]
     })
   }
